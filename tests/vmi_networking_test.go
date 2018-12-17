@@ -593,6 +593,7 @@ var _ = Describe("Networking", func() {
 			dhcpVMI.Spec.Domain.Devices.Interfaces[0].DHCPOptions = &v1.DHCPOptions{
 				BootFileName:   "config",
 				TFTPServerName: "tftp.kubevirt.io",
+				ExtraOptions:   map[int]string{240: "extra.options.kubevirt.io"},
 			}
 
 			_, err = virtClient.VirtualMachineInstance(tests.NamespaceTestDefault).Create(dhcpVMI)
