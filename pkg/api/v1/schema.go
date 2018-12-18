@@ -810,7 +810,6 @@ type DHCPOptions struct {
 	// If specified will pass option 66 to interface's DHCP server
 	// +optional
 	TFTPServerName string `json:"tftpServerName,omitempty"`
-
 	// If specified will pass extra DHCP options for private use, range: 224-254
 	// +optional
 	ExtraOptions map[int]string `json:"extraOptions,omitempty"`
