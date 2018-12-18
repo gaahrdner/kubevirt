@@ -371,6 +371,7 @@ func (DHCPOptions) SwaggerDoc() map[string]string {
 	return map[string]string{
 		"bootFileName":   "If specified will pass option 67 to interface's DHCP server\n+optional",
 		"tftpServerName": "If specified will pass option 66 to interface's DHCP server\n+optional",
+		"extraOptions":   "If specified will pass extra DHCP options for private use, range: 224-254\n+optional",
 	}
 }
 
