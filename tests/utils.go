@@ -1260,12 +1260,13 @@ func NewRandomVMIWithEphemeralDiskAndUserdataHighMemory(containerImage string, u
 func NewRandomVMIWithEFIBootloader(s bool) *v1.VirtualMachineInstance {
 	vmi := NewRandomVMI()
 
-	bootloader := v1.Bootloader{
-		EFI: &v1.EFI{
-			Secure: &s,
+	vmi.Spec.Domain.Firmware = &v1.Firmware{
+		Bootloader: &v1.Bootloader{
+			EFI: &v1.EFI{
+				Secure: &s,
+			},
 		},
 	}
-	vmi.Spec.Domain.Firmware.Bootloader = &bootloader
 
 	return vmi
 
