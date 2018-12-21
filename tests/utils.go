@@ -63,12 +63,12 @@ import (
 	"k8s.io/client-go/tools/remotecommand"
 
 	cdiv1 "kubevirt.io/containerized-data-importer/pkg/apis/datavolumecontroller/v1alpha1"
-	"kubevirt.io/kubevirt/pkg/api/v1"
+	v1 "kubevirt.io/kubevirt/pkg/api/v1"
 	"kubevirt.io/kubevirt/pkg/controller"
 	"kubevirt.io/kubevirt/pkg/kubecli"
 	"kubevirt.io/kubevirt/pkg/log"
 	"kubevirt.io/kubevirt/pkg/util/net/dns"
-	"kubevirt.io/kubevirt/pkg/virt-config"
+	virtconfig "kubevirt.io/kubevirt/pkg/virt-config"
 	"kubevirt.io/kubevirt/pkg/virt-controller/services"
 	"kubevirt.io/kubevirt/pkg/virtctl"
 	vmsgen "kubevirt.io/kubevirt/tools/vms-generator/utils"
@@ -1255,6 +1255,20 @@ func NewRandomVMIWithEphemeralDiskAndUserdataHighMemory(containerImage string, u
 
 	vmi.Spec.Domain.Resources.Requests[k8sv1.ResourceMemory] = resource.MustParse("512M")
 	return vmi
+}
+
+func NewRandomVMIWithEFIBootloader(s bool) *v1.VirtualMachineInstance {
+	vmi := NewRandomVMI()
+
+	bootloader := v1.Bootloader{
+		EFI: &v1.EFI{
+			Secure: &s,
+		},
+	}
+	vmi.Spec.Domain.Firmware.Bootloader = &bootloader
+
+	return vmi
+
 }
 
 func NewRandomMigration(vmiName string, namespace string) *v1.VirtualMachineInstanceMigration {

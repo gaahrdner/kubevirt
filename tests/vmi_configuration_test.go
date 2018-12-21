@@ -192,6 +192,24 @@ var _ = Describe("Configurations", func() {
 			})
 		})
 
+		Context("with EFI bootloader method", func() {
+
+			It("should use EFI", func() {
+				vmi := tests.NewRandomVMIWithEFIBootloader(true)
+
+				By("Starting a VirtualMachineInstance")
+				vmi, err = virtClient.VirtualMachineInstance(tests.NamespaceTestDefault).Create(vmi)
+				Expect(err).ToNot(HaveOccurred())
+				tests.WaitForSuccessfulVMIStart(vmi)
+
+				domXml, err := tests.GetRunningVirtualMachineInstanceDomainXML(virtClient, vmi)
+				Expect(err).ToNot(HaveOccurred())
+				fmt.Println(domXml)
+				Expect(domXml).To(ContainSubstring("efi"))
+			})
+
+		})
+
 		Context("with diverging guest memory from requested memory", func() {
 			It("should show the requested guest memory inside the VMI", func() {
 				vmi := tests.NewRandomVMIWithEphemeralDiskAndUserdata(tests.ContainerDiskFor(tests.ContainerDiskCirros), "#!/bin/bash\necho 'hello'\n")
@@ -814,7 +832,7 @@ var _ = Describe("Configurations", func() {
 			It("should be scheduled on a node with running cpu manager", func() {
 				cpuVmi := tests.NewRandomVMIWithEphemeralDiskAndUserdata(tests.ContainerDiskFor(tests.ContainerDiskCirros), "#!/bin/bash\necho 'hello'\n")
 				cpuVmi.Spec.Domain.CPU = &v1.CPU{
-					Cores: 2,
+					Cores:                 2,
 					DedicatedCPUPlacement: true,
 				}
 				cpuVmi.Spec.Domain.Resources = v1.ResourceRequirements{
@@ -905,7 +923,7 @@ var _ = Describe("Configurations", func() {
 			It("should fail the vmi creation if the requested resources are inconsistent", func() {
 				cpuVmi := tests.NewRandomVMIWithEphemeralDiskAndUserdata(tests.ContainerDiskFor(tests.ContainerDiskCirros), "#!/bin/bash\necho 'hello'\n")
 				cpuVmi.Spec.Domain.CPU = &v1.CPU{
-					Cores: 2,
+					Cores:                 2,
 					DedicatedCPUPlacement: true,
 				}
 				cpuVmi.Spec.Domain.Resources = v1.ResourceRequirements{
